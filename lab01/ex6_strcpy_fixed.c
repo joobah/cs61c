@@ -5,13 +5,7 @@
 int main() {
   // TODO: Create space to store the string "hello"
   // You may use your solution from a previous exercise;
-  ______ message[______];
-  ______ = 'h';
-  ______ = 'e';
-  ______ = 'l';
-  ______ = 'l';
-  ______ = 'o';
-  ______ = ______;
+  char message[6] = "hello";
 
   // Print out the value before we change message
   printf("Before copying: %s\n", message);
@@ -20,10 +14,14 @@ int main() {
   char* long_message = "Here's a really long string";
 
   // TODO: Copy the string in long_message to message
-  strncpy(______, ______, ______);
+  strncpy(message, long_message, strlen(message));
 
   // Print out the value after we change message
   printf("After copying: %s\n", message);
+
+  // Out of curiosity check the contents and length of message
+  printf("6th index of message: %s\n", message[5]);
+  printf("Length of message: %d\n", strlen(message));
 
   return 0;
 }
