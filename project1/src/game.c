@@ -61,14 +61,13 @@ void free_game(game_t *game) {
   }
   free(game->board);
   free(game);
-
-  return;
 }
 
 /* Task 3 */
 void print_board(game_t *game, FILE *fp) {
-  // TODO: Implement this function.
-  return;
+  for(int i = 0; i < game->num_rows; i++) {
+    fprintf(fp, game->board[i]);
+  }
 }
 
 /*
@@ -76,7 +75,7 @@ void print_board(game_t *game, FILE *fp) {
   (already implemented for you).
 */
 void save_board(game_t *game, char *filename) {
-  FILE *f = fopen(filename, "w");
+  FILE *f = fopen(filename, "wb");
   print_board(game, f);
   fclose(f);
 }
