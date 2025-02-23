@@ -33,20 +33,21 @@ game_t *create_default_game() {
   snake->head_col = 4;
   snake->tail_row = 2;
   snake->tail_col = 2;
+  snake->live = true;
   game->snakes = snake;
 
   // Create the board
   game->num_rows = 18;
   char **board = malloc(sizeof(char*) * game->num_rows);
   for(int i = 0; i < game->num_rows; i++) {
-    board[i] = malloc(sizeof(char) * 21); // 20 columns + 1 for null terminator
-    strcpy(board[i], "#                  #");
+    board[i] = malloc(sizeof(char) * 22); // 20 columns +1 (newline) +1 (null terminator)
+    strcpy(board[i], "#                  #\n");
   }
 
   // Fix the other rows
-  strcpy(board[0], "####################");
-  strcpy(board[2], "# d>D    *         #");
-  strcpy(board[game->num_rows-1], "####################");
+  strcpy(board[0], "####################\n");
+  strcpy(board[2], "# d>D    *         #\n");
+  strcpy(board[game->num_rows-1], "####################\n");
   game->board = board;
   
   return game;
