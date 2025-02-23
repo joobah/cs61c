@@ -23,8 +23,33 @@ static void update_head(game_t *game, unsigned int snum);
 
 /* Task 1 */
 game_t *create_default_game() {
-  // TODO: Implement this function.
-  return NULL;
+  // Create the game struct on the heap
+  game_t *game = malloc(sizeof(game_t));
+
+  // Create the snake struct
+  game->num_snakes = 1;
+  snake_t *snake = malloc(sizeof(snake_t) * game->num_snakes);
+  snake->head_row = 2;
+  snake->head_col = 4;
+  snake->tail_row = 2;
+  snake->tail_col = 2;
+  game->snakes = snake;
+
+  // Create the board
+  game->num_rows = 18;
+  char **board = malloc(sizeof(char*) * game->num_rows);
+  for(int i = 0; i < game->num_rows; i++) {
+    board[i] = malloc(sizeof(char) * 21); // 20 columns + 1 for null terminator
+    strcpy(board[i], "#                  #");
+  }
+
+  // Fix the other rows
+  strcpy(board[0], "####################");
+  strcpy(board[2], "# d>D    *         #");
+  strcpy(board[game->num_rows-1], "####################");
+  game->board = board;
+  
+  return game;
 }
 
 /* Task 2 */
