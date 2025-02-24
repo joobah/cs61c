@@ -239,8 +239,22 @@ static char next_square(game_t *game, unsigned int snum) {
   Note that this function ignores food, walls, and snake bodies when moving the head.
 */
 static void update_head(game_t *game, unsigned int snum) {
-  // TODO: Implement this function.
-  return;
+  snake_t *snake = (game->snakes + snum);
+  char snake_head = get_board_at(game, snake->head_row, snake->head_col);
+  
+  unsigned int next_row = get_next_row(snake->head_row, snake_head);
+  unsigned int next_col = get_next_col(snake->head_col, snake_head);
+
+  // Replace current head with body
+  char new_snake_body = head_to_body(snake_head);
+  set_board_at(game, snake->head_row, snake->head_col, new_snake_body);
+
+  // Set new position on board with snake head
+  set_board_at(game, next_row, next_col, snake_head);
+
+  // Update snake struct
+  snake->head_row = next_row;
+  snake->head_col = next_col;
 }
 
 /*
@@ -254,14 +268,49 @@ static void update_head(game_t *game, unsigned int snum) {
   ...in the snake struct: update the row and col of the tail
 */
 static void update_tail(game_t *game, unsigned int snum) {
-  // TODO: Implement this function.
-  return;
+  snake_t *snake = (game->snakes + snum);
+  char snake_tail = get_board_at(game, snake->tail_row, snake->tail_col);
+  
+  unsigned int next_row = get_next_row(snake->tail_row, snake_tail);
+  unsigned int next_col = get_next_col(snake->tail_col, snake_tail);
+
+  // Blank out current tail
+  set_board_at(game, snake->tail_row, snake->tail_col, ' ');
+
+  // Replace snake body with snake tail
+  char snake_body = get_board_at(game, next_row, next_col);
+  char new_snake_tail = body_to_tail(snake_body);
+  set_board_at(game, next_row, next_col, new_snake_tail);
+
+  // Update snake struct
+  snake->tail_row = next_row;
+  snake->tail_col = next_col;
 }
 
 /* Task 4.5 */
 void update_game(game_t *game, int (*add_food)(game_t *game)) {
-  // TODO: Implement this function.
-  return;
+  for(unsigned int snum = 0; snum < game->num_snakes; snum++) {
+    snake_t *snake = game->snakes + snum;
+
+    // Don't move dead snake
+    if(!snake->live) {
+      continue;
+    }
+
+    char next_square_for_snake = next_square(game, snum);
+
+    // snake dies if the next square is a wall or snake
+    if(next_square_for_snake == '#' || is_snake(next_square_for_snake)) {
+      set_board_at(game, snake->head_row, snake->head_col, 'x');
+      snake->live = false;
+    } else if (next_square_for_snake == '*') { // If food, only update head and add new food
+      update_head(game, snum);
+      add_food(game);
+    } else {
+      update_head(game, snum);
+      update_tail(game, snum);
+    }
+  }
 }
 
 /* Task 5.1 */
