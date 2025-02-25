@@ -25,6 +25,7 @@ static void update_head(game_t *game, unsigned int snum);
 const char* SNAKE_HEAD_CHARS = "WASDx";
 const char* SNAKE_BODY_CHARS = "^<v>";
 const char* SNAKE_TAIL_CHARS = "wasd";
+const size_t READ_BUFFER = 10;
 
 /* Task 1 */
 game_t *create_default_game() {
@@ -315,14 +316,49 @@ void update_game(game_t *game, int (*add_food)(game_t *game)) {
 
 /* Task 5.1 */
 char *read_line(FILE *fp) {
-  // TODO: Implement this function.
-  return NULL;
+  char* line = NULL;
+  char temp[READ_BUFFER + 1];
+  unsigned int loop_index = 0;
+
+  while(fgets(temp, (int)READ_BUFFER + 1, fp) != NULL) {
+    // size 11, 21, 31, etc.
+    line = realloc(line, sizeof(char) * (READ_BUFFER * (loop_index + 1) + 1));
+
+    // copy temp to 0, 10, 20, etc.
+    strcpy(line + loop_index * READ_BUFFER, temp);
+
+    // Exit if we read the newline
+    if(strchr(temp, '\n') != NULL) {
+      break;
+    }
+    
+    loop_index++;
+  }
+  return line;
 }
 
 /* Task 5.2 */
 game_t *load_board(FILE *fp) {
-  // TODO: Implement this function.
-  return NULL;
+  game_t *game = malloc(sizeof(game_t));
+
+  unsigned int rows = 0;
+  char **board = NULL;
+
+  while (true) {
+    char *line = read_line(fp);
+    if(line == NULL) {
+      break;
+    };
+    rows++;
+    board = realloc(board, sizeof(char*) * rows);
+    board[rows - 1] = line;
+  }
+
+  game->board = board;
+  game->num_rows = rows;
+  game->snakes = NULL;
+  
+  return game;
 }
 
 /*
