@@ -339,6 +339,10 @@ char *read_line(FILE *fp) {
 
 /* Task 5.2 */
 game_t *load_board(FILE *fp) {
+  if(fp == NULL) {
+    return NULL;
+  }
+  
   game_t *game = malloc(sizeof(game_t));
 
   unsigned int rows = 0;
